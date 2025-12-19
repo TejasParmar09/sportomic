@@ -11,7 +11,6 @@ import {
     Filler
 } from 'chart.js'
 import { format, parseISO } from 'date-fns'
-import './RevenueChart.css'
 
 ChartJS.register(
     CategoryScale,
@@ -27,8 +26,10 @@ ChartJS.register(
 const RevenueChart = ({ data }) => {
     if (!data || data.length === 0) {
         return (
-            <div className="revenue-chart-container">
-                <div className="chart-placeholder">No data available</div>
+            <div className="mt-6 rounded-xl bg-white p-6 shadow-sm border border-dashed border-gray-200">
+                <div className="flex h-80 items-center justify-center text-sm text-gray-500">
+                    No data available
+                </div>
             </div>
         )
     }
@@ -121,9 +122,9 @@ const RevenueChart = ({ data }) => {
     }
 
     return (
-        <div className="revenue-chart-container">
-            <h3 className="chart-title">Revenue - Venues</h3>
-            <div className="chart-wrapper">
+        <div className="mt-6 rounded-xl bg-white p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-gray-900 mb-4">Revenue - Venues</h3>
+            <div className="h-80">
                 <Line data={chartData} options={options} />
             </div>
         </div>

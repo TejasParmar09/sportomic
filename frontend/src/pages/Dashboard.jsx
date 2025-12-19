@@ -4,7 +4,6 @@ import MetricCard from '../components/MetricCard'
 import FilterDropdown from '../components/FilterDropdown'
 import RevenueChart from '../components/RevenueChart'
 import { dashboardAPI } from '../services/api'
-import './Dashboard.css'
 
 const Dashboard = () => {
     const [stats, setStats] = useState(null)
@@ -132,25 +131,17 @@ const Dashboard = () => {
     }
 
 
-    if (loading && !stats) {
-        return (
-            <div className="dashboard-container">
-                <div className="loading">Loading...</div>
-            </div>
-        )
-    }
-
     return (
-        <div className="dashboard-container">
-            <div className="dashboard-header">
-                <h1>Dashboard</h1>
+        <div className="px-3 py-6 sm:px-4 lg:px-6 max-w-7xl mx-auto">
+            <div className="mb-6 border-b border-gray-200 pb-4 flex items-center justify-between">
+                <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
             </div>
 
             <DashboardTabs />
 
-            <div className="dashboard-content">
-                <div className="filters-section">
-                    <div className="filters">
+            <div className="space-y-6">
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                         <FilterDropdown
                             label="All Venues"
                             value={filters.venue_id}
@@ -169,17 +160,27 @@ const Dashboard = () => {
                 </div>
 
                 {error && (
-                    <div className="error-message" style={{ marginBottom: '20px', padding: '12px', background: '#fff3cd', borderRadius: '4px', color: '#856404' }}>
-                        {error}
-                        <button onClick={fetchDashboardData} style={{ marginLeft: '10px', padding: '5px 10px', cursor: 'pointer' }}>
+                    <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-lg flex items-center justify-between">
+                        <span className="text-sm">{error}</span>
+                        <button
+                            onClick={fetchDashboardData}
+                            className="ml-4 inline-flex items-center rounded-md bg-yellow-600 px-3 py-1 text-xs font-medium text-white hover:bg-yellow-700"
+                        >
                             Retry
                         </button>
                     </div>
                 )}
 
+                {loading && !stats && (
+                    <div className="flex items-center justify-center py-10">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-green-500" />
+                        <span className="ml-3 text-sm text-gray-600">Loading...</span>
+                    </div>
+                )}
+
                 {stats && (
                     <>
-                        <div className="metrics-grid">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                             <MetricCard title="Active Members" value={stats.active_members || 0} />
                             <MetricCard title="Inactive Members" value={stats.inactive_members || 0} />
                             <MetricCard

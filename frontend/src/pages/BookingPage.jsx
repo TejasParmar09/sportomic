@@ -2,7 +2,6 @@ import { useState, useEffect, useRef } from 'react'
 import DashboardTabs from '../components/DashboardTabs'
 import FilterDropdown from '../components/FilterDropdown'
 import { dashboardAPI } from '../services/api'
-import './BookingPage.css'
 
 const BookingPage = () => {
     const [bookings, setBookings] = useState([])
@@ -107,16 +106,16 @@ const BookingPage = () => {
     }
 
     return (
-        <div className="dashboard-container">
-            <div className="dashboard-header">
-                <h1>Booking Dashboard</h1>
+        <div className="px-3 py-6 sm:px-4 lg:px-6 max-w-7xl mx-auto">
+            <div className="mb-6 border-b border-gray-200 pb-4 flex items-center justify-between">
+                <h1 className="text-2xl font-semibold text-gray-900">Booking Dashboard</h1>
             </div>
 
             <DashboardTabs />
 
-            <div className="dashboard-content">
-                <div className="filters-section">
-                    <div className="filters">
+            <div className="space-y-6">
+                <div className="bg-white rounded-2xl shadow-sm p-4 sm:p-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
                         <FilterDropdown
                             label="All Venues"
                             value={filters.venue_id}
@@ -135,46 +134,67 @@ const BookingPage = () => {
                 </div>
 
                 {error && (
-                    <div className="error-message" style={{ marginBottom: '20px', padding: '12px', background: '#fff3cd', borderRadius: '4px', color: '#856404' }}>
-                        {error}
-                        <button onClick={fetchBookings} style={{ marginLeft: '10px', padding: '5px 10px', cursor: 'pointer' }}>
+                    <div className="bg-yellow-50 border border-yellow-300 text-yellow-800 px-4 py-3 rounded-lg flex items-center justify-between">
+                        <span className="text-sm">{error}</span>
+                        <button
+                            onClick={fetchBookings}
+                            className="ml-4 inline-flex items-center rounded-md bg-yellow-600 px-3 py-1 text-xs font-medium text-white hover:bg-yellow-700"
+                        >
                             Retry
                         </button>
                     </div>
                 )}
 
                 {loading ? (
-                    <div className="loading">Loading bookings...</div>
+                    <div className="flex items-center justify-center py-10">
+                        <div className="h-6 w-6 animate-spin rounded-full border-2 border-gray-300 border-t-green-500" />
+                        <span className="ml-3 text-sm text-gray-600">Loading bookings...</span>
+                    </div>
                 ) : (
-                    <div className="bookings-list">
-                        <h2>Bookings ({bookings.length})</h2>
-                        <div className="bookings-table-container">
-                            <table className="bookings-table">
+                    <div className="bg-white rounded-xl shadow-sm p-4 sm:p-6">
+                        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                            Bookings <span className="text-sm font-normal text-gray-500">({bookings.length})</span>
+                        </h2>
+                        <div className="overflow-x-auto">
+                            <table className="min-w-full divide-y divide-gray-200 text-sm">
                                 <thead>
-                                    <tr>
-                                        <th>Booking ID</th>
-                                        <th>Venue ID</th>
-                                        <th>Member ID</th>
-                                        <th>Date</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th>Coupon Code</th>
+                                    <tr className="bg-gray-50">
+                                        <th className="px-4 py-2 text-left font-semibold text-gray-700">Booking ID</th>
+                                        <th className="px-4 py-2 text-left font-semibold text-gray-700">Venue ID</th>
+                                        <th className="px-4 py-2 text-left font-semibold text-gray-700">Member ID</th>
+                                        <th className="px-4 py-2 text-left font-semibold text-gray-700">Date</th>
+                                        <th className="px-4 py-2 text-left font-semibold text-gray-700">Amount</th>
+                                        <th className="px-4 py-2 text-left font-semibold text-gray-700">Status</th>
+                                        <th className="px-4 py-2 text-left font-semibold text-gray-700">Coupon Code</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="divide-y divide-gray-100">
                                     {bookings.map((booking) => (
-                                        <tr key={booking.booking_id}>
-                                            <td>{booking.booking_id}</td>
-                                            <td>{booking.venue_id}</td>
-                                            <td>{booking.member_id}</td>
-                                            <td>{new Date(booking.booking_date).toLocaleDateString()}</td>
-                                            <td>₹{booking.amount.toFixed(2)}</td>
-                                            <td>
-                                                <span className={`status-badge status-${booking.status.toLowerCase()}`}>
+                                        <tr key={booking.booking_id} className="hover:bg-gray-50">
+                                            <td className="px-4 py-2 whitespace-nowrap">{booking.booking_id}</td>
+                                            <td className="px-4 py-2 whitespace-nowrap">{booking.venue_id}</td>
+                                            <td className="px-4 py-2 whitespace-nowrap">{booking.member_id}</td>
+                                            <td className="px-4 py-2 whitespace-nowrap">
+                                                {new Date(booking.booking_date).toLocaleDateString()}
+                                            </td>
+                                            <td className="px-4 py-2 whitespace-nowrap">
+                                                ₹{booking.amount.toFixed(2)}
+                                            </td>
+                                            <td className="px-4 py-2 whitespace-nowrap">
+                                                <span
+                                                    className={`inline-flex rounded-full px-3 py-1 text-xs font-medium capitalize ${booking.status.toLowerCase() === 'confirmed'
+                                                        ? 'bg-green-100 text-green-700'
+                                                        : booking.status.toLowerCase() === 'completed'
+                                                            ? 'bg-blue-100 text-blue-700'
+                                                            : booking.status.toLowerCase() === 'cancelled'
+                                                                ? 'bg-red-100 text-red-700'
+                                                                : 'bg-gray-100 text-gray-700'
+                                                        }`}
+                                                >
                                                     {booking.status}
                                                 </span>
                                             </td>
-                                            <td>{booking.coupon_code || '-'}</td>
+                                            <td className="px-4 py-2 whitespace-nowrap">{booking.coupon_code || '-'}</td>
                                         </tr>
                                     ))}
                                 </tbody>
